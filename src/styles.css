@@ -1,0 +1,132 @@
+/* NoteTab styles */
+
+body {
+    background-color: #e1dfd7;
+    display: flex;
+    flex-direction: column; /* This ensures that the body's children are stacked vertically */
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Prevents scrolling */
+}
+
+#top-section {
+    height: 100px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 100px; /* Adds space below the top section */
+}
+
+#app-container {
+    display: flex;
+    justify-content: space-between; /* This will add space between the child elements */
+    align-items: flex-start;
+    padding: 0 80px; /* Adjust the horizontal padding to create the desired space */
+    width: calc(100% - 100px); /* Subtract the total horizontal padding from the width */
+}
+
+#markdown-input-container {
+    position: relative; /* Allows absolute positioning within */
+    width: 750px; /* Match the width of the markdown input for alignment */
+    box-shadow: 0px 2px 6px rgba(3, 7, 18, 0.02),
+                0px 6px 24px rgba(3, 7, 18, 0.1);
+}
+
+#markdown-input {
+    width: 100%; /* Set the width of the text area */
+    height: 500px; /* Set the starting height of the text area to 900px */
+    background-color: #F1E6CF; /* Set the background color of the text area */
+    padding: 20px; /* Adds some padding inside the text area */
+    box-sizing: border-box; /* Ensures padding does not affect the overall width */
+    border: 2px solid #FEFEFE; /* Changed the border color to a slightly darker shade */
+    outline: none; /* Removes the outline to keep the focus style clean */
+    color: #4E4E4E; /* Sets the font color to a soft dark grey */
+}
+
+#logo {
+    position: absolute;
+    top: 20px; /* Adjusted to create space from the top edge */
+    right: 20px; /* Adjusted to create space from the right edge */
+    width: 150px;
+    height: auto;
+    object-fit: contain;
+    margin: 0; /* Removed the margin */
+    cursor: pointer;
+}
+
+#logo-container:hover #edit-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+#saved-notes-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-left: 20px;
+    height: 500px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer 11 */
+    width: 300px;
+    
+    .saved-note {
+        background-color: #F1E6CF; /* Set the background color of the text area */
+        border: 1px solid #FEFEFE; /* Changed the border color to a slightly darker shade */
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 2px;
+        width: 80%; /* Adjust based on your layout */
+        position: relative; /* Added for absolute positioning of the delete icon */
+        cursor: pointer;
+    }
+    .saved-note:hover {
+        background-color: #f1e2c2; /* Set the background color of the text area */
+    }
+}
+
+#saved-notes-container::-webkit-scrollbar {
+    width: 5px; /* For Chrome, Safari, and Opera */
+}
+
+#saved-notes-container::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scroll thumb */
+    border-radius: 10px; /* Roundness of the scroll thumb */
+}
+
+#saved-notes-container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the scroll thumb on hover */
+}
+
+.delete-note-icon {
+  position: absolute; /* Adjusted for new positioning */
+  top: 10px; /* Align to the top right of the note */
+  right: 10px; /* Align to the top right of the note */
+  color: #e959a4;
+  cursor: pointer;
+  margin-left: 10px;
+  
+  svg {
+    fill: #e959a4; /* Set SVG fill color */
+  }
+}
+
+/* Popup window styles */
+
+#popup {
+    width: 600px; /* Updated width to be wider, about 200px more */
+    height: auto; /* Adjust height automatically based on content */
+    padding: 15px;
+    background-color: #f0f0f0; /* Same as #top-section */
+}
