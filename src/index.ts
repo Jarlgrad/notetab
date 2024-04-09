@@ -78,22 +78,35 @@ const isTodayLastWorkdayOfMonth = () => {
     const holidays = new Holidays('SE');
     const currentDate = new Date();
     const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
     const swedishHolidays = holidays.getHolidays(year);
 
-    const nextMonth = (currentDate.getMonth() + 1) % 12; // Get the next month
-    const nextMonthFirstDay = new Date(year, nextMonth, 1);
-    const lastMonthDay = new Date(nextMonthFirstDay.getTime() - 86400000); // Subtract a day to get the last day of the current month
+    // Function to check if a given day is a holiday
+    const isHoliday = (date: Date) => {
+        const formattedDate = date.toISOString().split('T')[0];
+        return swedishHolidays.some(holiday => holiday.date === formattedDate);
+    };
+    // Function to check if a given day is a weekend (Saturday or Sunday)
+    const isWeekend = (date: Date) => {
+        const dayOfWeek = date.getDay();
+        return dayOfWeek === 0 || dayOfWeek === 6; // 0 = Sunday, 6 = Saturday
+    };
+    
+    // Check if today is the last workday by looking ahead to see if the remaining days are holidays or weekends
+    let tempDate = new Date(currentDate);
+    tempDate.setDate(tempDate.getDate() + 1); // Start checking from tomorrow
+    const lastDayOfMonth = new Date(year, month + 1, 0); // Last day of the current month
 
-    if (lastMonthDay.getDay() >= 1 && lastMonthDay.getDay() <= 5 && currentDate === lastMonthDay) {
-        const formattedCurrentDate = currentDate.toISOString().split('T')[0];
-        const isHoliday = swedishHolidays.some(holiday => holiday.date === formattedCurrentDate);
-        if (isHoliday) {
+    while (tempDate <= lastDayOfMonth) {
+        if (!isHoliday(tempDate) && !isWeekend(tempDate)) {
+            // Found a day that is not a holiday or weekend before the month ends
             return false;
         }
-        return true;
+        tempDate.setDate(tempDate.getDate() + 1); // Move to the next day
     }
-    return false;
-}
+    // If we reach this point, it means all remaining days are either holidays or weekends
+    return true;
+};
 
 const displayCustomLogo = () => {
     const customLogo = localStorage.getItem('customLogo');
@@ -107,7 +120,13 @@ const displayCustomLogo = () => {
 }
 
 document.getElementById('logo')?.addEventListener('click', function() {
-    document.getElementById('imageUpload')?.click(); // Trigger file input dialog
+    document.getElementById('imageUpload')?.click();
+});
+
+document.getElementById('logo')?.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+        document.getElementById('imageUpload')?.click();
+    }
 });
 
 document.getElementById('imageUpload')?.addEventListener('change', function(event) {
@@ -118,9 +137,7 @@ document.getElementById('imageUpload')?.addEventListener('change', function(even
             const reader = new FileReader();
             reader.onload = function(e) {
                 if (e.target && e.target.result) {
-                    // Store the Base64 string in localStorage
                     localStorage.setItem('customLogo', e.target.result.toString());
-                    // Update the cc-logo image if it's displayed in the popup
                     const logoImg = document.getElementById('logo');
                     if (logoImg) {
                         (logoImg as HTMLImageElement).src = e.target.result.toString();
@@ -129,13 +146,5 @@ document.getElementById('imageUpload')?.addEventListener('change', function(even
             };
             reader.readAsDataURL(file);
         }
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const customLogo = localStorage.getItem('customLogo');
-    const logoImg = document.getElementById('cc-logo');
-    if (customLogo && logoImg) {
-        (logoImg as HTMLImageElement).src = customLogo;
     }
 });
