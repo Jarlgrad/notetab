@@ -1,7 +1,7 @@
 import showdown from 'showdown';
 import Holidays from 'date-holidays';
 
-import type { Note } from './noteUtils';
+import type { Note } from './noteStorage';
 import { saveNote, displaySavedNotes } from './noteStorage';
 
 let activeNoteId: string = "";
@@ -28,6 +28,36 @@ document.addEventListener('DOMContentLoaded', function() {
         inputDiv.addEventListener('keydown', function(event: KeyboardEvent) {
             handleKeyDown(event, inputDiv as HTMLElement, converter); // Pass inputDiv and converter as arguments
         });
+    }
+});
+
+document.getElementById('logo')?.addEventListener('click', function() {
+    document.getElementById('imageUpload')?.click();
+});
+
+document.getElementById('logo')?.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+        document.getElementById('imageUpload')?.click();
+    }
+});
+
+document.getElementById('imageUpload')?.addEventListener('change', function(event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (e.target && e.target.result) {
+                    localStorage.setItem('customLogo', e.target.result.toString());
+                    const logoImg = document.getElementById('logo');
+                    if (logoImg) {
+                        (logoImg as HTMLImageElement).src = e.target.result.toString();
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        }
     }
 });
 
@@ -116,36 +146,6 @@ const displayCustomLogo = () => {
         logoImg.style.display = 'block';
     }
 }
-
-document.getElementById('logo')?.addEventListener('click', function() {
-    document.getElementById('imageUpload')?.click();
-});
-
-document.getElementById('logo')?.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-        document.getElementById('imageUpload')?.click();
-    }
-});
-
-document.getElementById('imageUpload')?.addEventListener('change', function(event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-        const file = input.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                if (e.target && e.target.result) {
-                    localStorage.setItem('customLogo', e.target.result.toString());
-                    const logoImg = document.getElementById('logo');
-                    if (logoImg) {
-                        (logoImg as HTMLImageElement).src = e.target.result.toString();
-                    }
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-});
 
 const isMarkdown = (text: string): boolean => {
     const markdownPatterns = [/^#{1,6}\s/, /^\*\s/, /^-\s/, /^\+\s/, /\*\*/, /__/, /~~/, /\!\[.*\]\(.*\)/, /\[.*\]\(.*\)/];
