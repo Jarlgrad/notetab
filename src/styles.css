@@ -137,7 +137,7 @@ body {
 /* Popup window styles */
 
 #popup {
-    width: 600px; /* Updated width to be wider, about 200px more */
+    width: 300px; /* Updated width to be wider, about 200px more */
     height: auto; /* Adjust height automatically based on content */
     padding: 15px;
     background-color: #f0f0f0; /* Same as #top-section */
