@@ -2,7 +2,6 @@ import showdown from 'showdown';
 import Holidays from 'date-holidays';
 
 import type { Note } from './noteUtils';
-import { isCursorAtTheEnd, isMarkdown, placeCaretAtEnd, insertNewLine } from './noteUtils';
 import { saveNote, displaySavedNotes } from './noteStorage';
 
 let activeNoteId: string = "";
@@ -80,7 +79,7 @@ const isTodayLastWorkdayOfMonth = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const swedishHolidays = holidays.getHolidays(year);
-
+    
     // Function to check if a given day is a holiday
     const isHoliday = (date: Date) => {
         const formattedDate = date.toISOString().split('T')[0];
@@ -91,7 +90,6 @@ const isTodayLastWorkdayOfMonth = () => {
         const dayOfWeek = date.getDay();
         return dayOfWeek === 0 || dayOfWeek === 6; // 0 = Sunday, 6 = Saturday
     };
-    
     // Check if today is the last workday by looking ahead to see if the remaining days are holidays or weekends
     let tempDate = new Date(currentDate);
     tempDate.setDate(tempDate.getDate() + 1); // Start checking from tomorrow
@@ -148,3 +146,41 @@ document.getElementById('imageUpload')?.addEventListener('change', function(even
         }
     }
 });
+
+const isMarkdown = (text: string): boolean => {
+    const markdownPatterns = [/^#{1,6}\s/, /^\*\s/, /^-\s/, /^\+\s/, /\*\*/, /__/, /~~/, /\!\[.*\]\(.*\)/, /\[.*\]\(.*\)/];
+    return markdownPatterns.some(pattern => pattern.test(text));
+  };
+  
+const isCursorAtTheEnd = (currentLine: string): boolean => {
+    let selection = window.getSelection();
+    if (!selection) return false; // Check if selection is null and return false if it is
+    let range = selection.getRangeAt(0);
+    let offset = range.endOffset;
+        
+    return offset === currentLine.length;
+};
+
+const insertNewLine = (el: HTMLElement, isBulletList: boolean): void => {
+    if (!el.innerHTML.endsWith("<div><br></div>") && !el.innerHTML.endsWith("<br>")) {
+        if (isBulletList) { 
+            el.innerHTML += "<div>*&nbsp;</div>" // Add a new line with an asterisk and space
+        } else {
+            el.innerHTML += "<div><br></div>"; 
+        }
+    }
+};
+
+const placeCaretAtEnd = (el: HTMLElement): void => {
+    el.focus();
+    if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        var sel = window.getSelection();
+        if (sel) { // Check if sel is not null
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+};
