@@ -50,24 +50,38 @@ body {
 
 #logo {
     position: absolute;
-    top: 20px; /* Adjusted to create space from the top edge */
-    right: 20px; /* Adjusted to create space from the right edge */
     width: 150px;
     height: auto;
     object-fit: contain;
     margin: 0; /* Removed the margin */
     cursor: pointer;
+    display: none;
 }
 
-#logo-container:hover #edit-icon {
-    display: block;
+#logo-container {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 20px;
-    height: 20px;
+    top: 20px; /* Adjusted to create space from the top edge */
+    right: 20px; /* Adjusted to create space from the right edge */
+    width: 150px;
+    min-height: 100px;
+    height: auto;
+    display: inline-block;
+    }
+
+#edit-icon {
+    width: 20px; 
+    height: 20px; 
+    display: none; 
+    position: absolute; 
     cursor: pointer;
 }
+#logo-container:hover #edit-icon {
+    display: inline-block;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+}
+
 
 #saved-notes-container {
     display: flex;

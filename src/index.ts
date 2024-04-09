@@ -12,15 +12,17 @@ document.addEventListener('DOMContentLoaded', function() {
     let converter = new showdown.Converter();
     let inputDiv = document.getElementById('markdown-input');
     displaySavedNotes();
+    displayCustomLogo();
 
     if (inputDiv) { // Perform the null check here
         var lastWorkdayText = document.getElementById('last-workday-text');
-        
         if(lastWorkdayText) {
             if (isTodayLastWorkdayOfMonth()) {
-                lastWorkdayText.style.display = 'block'; // Show the text on the last workday
+                lastWorkdayText.textContent = 'Last day of the month, don\'t forget to <a  target="_blank" href="https://academicwork.flexhosting.se/HRM">save your time report</a> ;)';
+            } else if (new Date().getDay() === 5) {
+                lastWorkdayText.textContent = 'Don\'t forget to <a  target="_blank" href="https://academicwork.flexhosting.se/HRM">time report</a> ;)';
             } else {
-                lastWorkdayText.style.display = 'none'; // Hide the text on other days
+                lastWorkdayText.textContent = 'A beautiful day for taking notes';
             }    
         }
         
@@ -72,20 +74,36 @@ const handleKeyDown = (
       }
   };
 
-function isTodayLastWorkdayOfMonth() {
-    // Create an instance of the Holidays class for Sweden
-    const holidays = new (Holidays as any)('SE');
-
-    // Get the holidays for a specific year (e.g., 2022)
+const isTodayLastWorkdayOfMonth = () => {
+    const holidays = new Holidays('SE');
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const swedishHolidays = holidays.getHolidays(year);
 
     const nextMonth = (currentDate.getMonth() + 1) % 12; // Get the next month
     const nextMonthFirstDay = new Date(year, nextMonth, 1);
-    const lastWorkday = new Date(nextMonthFirstDay.getTime() - 86400000); // Subtract a day to get the last day of the current month
-    // Check if the last day of the month is a workday (Monday to Friday)
-    return lastWorkday.getDay() >= 1 && lastWorkday.getDay() <= 5;
+    const lastMonthDay = new Date(nextMonthFirstDay.getTime() - 86400000); // Subtract a day to get the last day of the current month
+
+    if (lastMonthDay.getDay() >= 1 && lastMonthDay.getDay() <= 5 && currentDate === lastMonthDay) {
+        const formattedCurrentDate = currentDate.toISOString().split('T')[0];
+        const isHoliday = swedishHolidays.some(holiday => holiday.date === formattedCurrentDate);
+        if (isHoliday) {
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+const displayCustomLogo = () => {
+    const customLogo = localStorage.getItem('customLogo');
+    const logoImg = document.getElementById('logo');
+    if (customLogo && logoImg) {
+        (logoImg as HTMLImageElement).src = customLogo;
+    }
+    if (logoImg) {
+        logoImg.style.display = 'block';
+    }
 }
 
 document.getElementById('logo')?.addEventListener('click', function() {
