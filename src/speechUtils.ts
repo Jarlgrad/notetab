@@ -3,8 +3,7 @@ import { pipeline } from '@xenova/transformers';
 let recognition: SpeechRecognition | null = null; // Hold the SpeechRecognition instance
 
 export async function createVikingPipeline() {
-    const modelIdentifier = 'LumiOpen/Viking-7B';
-    const vikingPipeline = await pipeline('text-generation', modelIdentifier);
+    const vikingPipeline = await pipeline('text-generation', 'LumiOpen/Viking-7B');
     return vikingPipeline;
 }
 
@@ -27,12 +26,13 @@ export function startSpeechToText(displayCallback: (text: string) => void, updat
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
-    recognition.start = function() {
-        updateButtonCallback(true); // Indicate recording has started
-    };
-
-    recognition.onresult = function(event: any) {
+    recognition.onresult = async function(event: any) {
         const speechToText = event.results[0][0].transcript;
+        
+        // Assuming createVikingPipeline returns a function that can process text
+        const vikingPipeline = await createVikingPipeline();
+        const processedText = await vikingPipeline(speechToText); // This line is conceptual; actual implementation may vary
+   
         displayCallback(speechToText);
         stopSpeechToText(updateButtonCallback); // Stop recording after getting a result
     };
@@ -43,6 +43,7 @@ export function startSpeechToText(displayCallback: (text: string) => void, updat
     };
 
     recognition.start();
+    updateButtonCallback(true);
 }
 
 export function stopSpeechToText(updateButtonCallback: (isRecording: boolean) => void) {
