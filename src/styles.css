@@ -134,6 +134,45 @@ body {
   }
 }
 
+#record-btn {
+    background-color: #f0f0f0; /* Same as #top-section */
+    padding: 10px 20px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 20px; /* 20px from the bottom */
+    right: 20px; /* 20px from the right */
+    cursor: pointer;
+    /* Add more styling here to make the button look better */
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+#record-btn:hover {
+    background-color: #0056b3;
+}
+
+#stop-record-btn {
+    /* Example styling; adjust as needed */
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 20px; /* 20px from the bottom */
+    right: 20px; /* 20px from the right */
+    cursor: pointer;
+    margin-left: 10px; /* Space it out from the record button */
+    animation: pulseAnimation 1s infinite; /* Apply the animation */
+}
+
+@keyframes pulseAnimation {
+    0% { background-color: red; }
+    50% { background-color: #ff6666; } /* Slightly faded hue */
+    100% { background-color: red; }
+}
+
 /* Popup window styles */
 
 #popup {

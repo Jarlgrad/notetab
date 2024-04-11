@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@xenova/transformers": "^2.16.1",
     "date-holidays": "^3.23.10",
     "showdown": "^2.1.0",
     "ts-loader": "^9.5.1",
