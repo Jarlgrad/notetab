@@ -2,7 +2,7 @@ import showdown from 'showdown';
 import Holidays from 'date-holidays';
 import type { Note } from './noteStorage';
 import { saveNote, displaySavedNotes } from './noteStorage';
-import { startSpeechToText, createVikingPipeline, stopSpeechToText } from './speechUtils';
+import { startSpeechToText, stopSpeechToText } from './speechUtils';
 
 let activeNoteId: string = "";
 let currentNote: Note;
@@ -61,25 +61,6 @@ document.getElementById('imageUpload')?.addEventListener('change', function(even
     }
 });
 
-async function displayRecordedText(text: string) {
-    const markdownInputContainer = document.getElementById('markdown-input-container');
-    if (!markdownInputContainer) {
-        console.error('Markdown input container not found');
-        return;
-    }
-
-    // Display the recorded text
-    markdownInputContainer.textContent = text;
-
-    // Send the text to Viking-7B pipeline and display the response
-    const vikingPipeline = await createVikingPipeline();
-    const response = await vikingPipeline(text);
-    const generatedText = response[0] //.generated_text; // Assuming the response structure, adjust as needed
-    console.log(generatedText);
-    // Append the generated text to the container
-    markdownInputContainer.textContent += `\n\nGenerated Response:\n${generatedText}`;
-}
-
 document.getElementById('record-btn')?.addEventListener('click', () => {
     startSpeechToText(displayRecordedText, updateRecordingButton);    
 });
@@ -88,11 +69,22 @@ document.getElementById('stop-record-btn')?.addEventListener('click', () => {
     stopSpeechToText(updateRecordingButton);
 });
 
+async function displayRecordedText(text: string) {
+    const markdownInput = document.getElementById('markdown-input');
+    if (!markdownInput) {
+        console.error('Markdown input container not found');
+        return;
+    }
+
+    // Display the recorded text
+    markdownInput.textContent = text;
+}
+
 function updateRecordingButton(isRecording: boolean) {
     const recordBtn = document.getElementById('record-btn');
     const stopRecordBtn = document.getElementById('stop-record-btn');
     if (!recordBtn || !stopRecordBtn) return;
-
+    console.log("isRecording:", isRecording)
     if (isRecording) {
         stopRecordBtn.style.display = 'inline-block'; // Show the "Stop Recording" button
         recordBtn.style.display = 'none'; // Hide the "Record" button
