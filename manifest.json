@@ -3,7 +3,7 @@
   "name": "NoteTab",
   "version": "1.0",
   "description": "A handy notepad right in your new tab.",
-  "permissions": ["activeTab"],
+  "permissions": [ "activeTab" ],
   "chrome_url_overrides": {
     "newtab": "./src/index.html"
   },

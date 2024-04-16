@@ -10,6 +10,7 @@ let currentNote: Note;
 document.addEventListener('DOMContentLoaded', function() {
     let converter = new showdown.Converter();
     let inputDiv = document.getElementById('markdown-input');
+    
     displaySavedNotes();
     displayCustomLogo();
 
@@ -66,7 +67,7 @@ document.getElementById('record-btn')?.addEventListener('click', () => {
 });
 
 document.getElementById('stop-record-btn')?.addEventListener('click', () => {
-    stopSpeechToText(updateRecordingButton);
+    stopSpeechToText();
 });
 
 async function displayRecordedText(text: string) {
